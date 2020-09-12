@@ -19,7 +19,7 @@ class LogParser
     when :most_unique_visited
       most_unique_visited_pages
     else
-      'Mode not specified'
+      raise 'Incorrect mode provided'
     end
   end
 

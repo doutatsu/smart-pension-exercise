@@ -35,5 +35,13 @@ RSpec.describe LogParser do
         )
       end
     end
+
+    describe 'and mode provided does not exist' do
+      it 'raises Incorrect mode provided Runtime error' do
+        expect { described_class.parse('webserver.log', :test) }.to raise_error(
+          RuntimeError, 'Incorrect mode provided'
+        )
+      end
+    end
   end
 end
