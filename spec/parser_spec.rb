@@ -1,20 +1,20 @@
 require './parser'
 
 RSpec.describe Parser do
-  it 'initializes Parser class with provided file' do
-    output = Parser.parse('webserver.log')
+  describe 'when file is provied' do
+    it 'returns list of webpages with most page views ordered from most to least visited' do
+      output = Parser.parse('webserver.log')
 
-    expect(output).to include(
-      {
-        '016.464.657.359' => {
-          '/about' => 5,
-          '/about/2' => 5,
-          '/contact' => 2,
-          '/help_page/1' => 4,
-          '/home' => 3,
-          '/index' => 3
-        }
-      }
-    )
+      expect(output).to match_array(
+        [
+          '/about/2 90 visits',
+          '/contact 89 visits',
+          '/index 82 visits',
+          '/about 81 visits',
+          '/help_page/1 80 visits',
+          '/home 78 visits'
+        ]
+      )
+    end
   end
 end

@@ -3,21 +3,36 @@
 require 'pry'
 
 class Parser
-  def self.parse(file)
-    new(file).start
+  def self.parse(file, mode: :most_visited)
+    new(file, mode).start
   end
 
-  def initialize(file)
+  def initialize(file, mode)
     @file = file
+    @mode = mode
   end
 
   def start
-    tally_routes
+    case mode
+    when :most_visited
+      most_visited_pages
+    end
+  end
+
+  def most_visited_pages
+    page_counts =
+      parsed_log
+      .group_by(&:first)
+      .transform_values(&:count)
+      .sort_by { |count| -count.last }
+
+    page_counts.map { |route, count| "#{route} #{count} visits" }
   end
 
   private
 
   attr_reader :file
+  attr_reader :mode
 
   def log
     File.readlines(file)
