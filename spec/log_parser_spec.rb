@@ -36,6 +36,17 @@ RSpec.describe LogParser do
       end
     end
 
+    describe 'and mode is visits_per_ip' do
+      it 'returns visited pages per IP' do
+        output = described_class.parse('webserver.log', :visits_per_ip)
+        expected_string = '[126.318.035.038] /help_page/1 | 4 unique visits |'\
+        ' /index | 4 unique visits | /about | 3 unique visits | /contact |'\
+        ' 3 unique visits | /home | 3 unique visits | /about/2 | 1 unique visits'
+
+        expect(output).to include(expected_string)
+      end
+    end
+
     describe 'and mode provided does not exist' do
       it 'raises Incorrect mode provided Runtime error' do
         expect { described_class.parse('webserver.log', :test) }.to raise_error(

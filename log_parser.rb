@@ -18,6 +18,8 @@ class LogParser
       most_visited_pages
     when :most_unique_visited
       most_unique_visited_pages
+    when :visits_per_ip
+      visits_per_ip
     else
       raise 'Incorrect mode provided'
     end
@@ -43,6 +45,20 @@ class LogParser
       .sort_by { |count| -count.last }
 
     page_counts.map { |route, count| "#{route} #{count} unique visits" }
+  end
+
+  def visits_per_ip
+    tally_routes.map do |ip, route_counts|
+      count_string =
+        route_counts
+        .sort_by { |count| -count.last }
+        .to_h
+        .transform_values { |count| "#{count} unique visits" }
+        .to_a
+        .join(' | ')
+
+      "[#{ip}] #{count_string}"
+    end
   end
 
   private
