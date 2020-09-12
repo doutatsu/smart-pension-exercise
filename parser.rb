@@ -3,7 +3,7 @@
 require 'pry'
 
 class Parser
-  def self.parse(file, mode: :most_visited)
+  def self.parse(file, mode: :most_unique_visited)
     new(file, mode).start
   end
 
@@ -16,6 +16,8 @@ class Parser
     case mode
     when :most_visited
       most_visited_pages
+    when :most_unique_visited
+      most_unique_visited_pages
     end
   end
 
@@ -27,6 +29,18 @@ class Parser
       .sort_by { |count| -count.last }
 
     page_counts.map { |route, count| "#{route} #{count} visits" }
+  end
+
+  def most_unique_visited_pages
+    page_counts =
+      tally_routes
+      .transform_values(&:keys)
+      .values
+      .group_by(&:first)
+      .transform_values(&:count)
+      .sort_by { |count| -count.last }
+
+    page_counts.map { |route, count| "#{route} #{count} unique visits" }
   end
 
   private
